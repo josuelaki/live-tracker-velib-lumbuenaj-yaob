@@ -1,14 +1,29 @@
 import sqlite3
-
+import asyncio
+import sys
+import os
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-@app.get("/")
+from data_pipeline import data_recupereation_donnees as upd
 
-def root():
-    return {"Hello" : "World"}
+async def recup_data():
+    upd.initialiser_bdd()
+    while True:
+        donnees = upd.recuperer_donnees_velib()
+        upd.sauvegarder_donnees(donnees)
 
+        await asyncio.sleep(5)
+
+@asynccontextmanager
+async def boucle(app: FastAPI):
+    task = asyncio.create_task(recup_data())
+    yield
+    task.cancel()
+
+app = FastAPI(lifespan=boucle)
 
 @app.get("/stations")
 def get_stations():

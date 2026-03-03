@@ -35,10 +35,10 @@ def recuperer_donnees_velib():
         return None
 
 def initialiser_bdd():
-    connexion = sqlite3.connect("velib.db")
+    connexion = sqlite3.connect("../data_pipeline/velib.db")
     curseur = connexion.cursor()
 
-    with open("init.sql", "r") as fichier_sql:
+    with open("../data_pipeline/init.sql", "r") as fichier_sql:
         requete_creation = fichier_sql.read()
 
     curseur.executescript(requete_creation)
@@ -47,7 +47,7 @@ def initialiser_bdd():
     connexion.close()
 
 def sauvegarder_donnees(donnees):
-    connexion = sqlite3.connect("velib.db")
+    connexion = sqlite3.connect("../data_pipeline/velib.db")
     curseur = connexion.cursor()
 
     for station in donnees:
