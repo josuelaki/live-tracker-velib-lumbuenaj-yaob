@@ -51,7 +51,7 @@ def sauvegarder_donnees(donnees):
     curseur = connexion.cursor()
 
     for station in donnees:
-        requete = "INSERT INTO stations (nom, velos_dispo, places_dispo) VALUES (?, ?, ?) ON CONFLICT(nom) DO UPDATE SET velos_dispo = excluded.velos_dispo places_dispo = excluded.places_dispo"
+        requete = "INSERT INTO stations (nom, velos_dispo, places_dispo) VALUES (?, ?, ?) ON CONFLICT(nom) DO UPDATE SET velos_dispo = excluded.velos_dispo, places_dispo = excluded.places_dispo"
         valeurs = (station["nom"], station["velos_dispo"], station["places_dispo"])
 
         curseur.execute(requete, valeurs)
